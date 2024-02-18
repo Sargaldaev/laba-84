@@ -44,7 +44,7 @@ UserSchema.methods.checkPassword = async function (password) {
 };
 
 
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
 
