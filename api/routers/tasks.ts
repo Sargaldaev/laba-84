@@ -2,6 +2,7 @@ import express from 'express';
 import auth, {RequestWithUser} from '../middleware/auth';
 import {Error} from 'mongoose';
 import Task from '../models/Task';
+import User from '../models/User';
 
 const tasksRouter = express.Router();
 
@@ -33,7 +34,7 @@ tasksRouter.post('/', auth, async (req, res, next) => {
 
 });
 
-tasksRouter.get('/', auth, async (req, res, next) => {
+tasksRouter.get('/', auth, async (req, res) => {
 
   const user = (req as RequestWithUser).user;
 
@@ -41,6 +42,28 @@ tasksRouter.get('/', auth, async (req, res, next) => {
     const tasks = await Task.find({user});
 
     return res.send(tasks);
+
+  } catch (error) {
+    return res.send(error);
+  }
+
+});
+
+
+tasksRouter.delete('/:id', auth, async (req, res) => {
+
+  const user = (req as RequestWithUser).user;
+  const id = req.params.id;
+
+  try {
+    const taskByUser = await User.findOne({_id: user._id});
+    const task = await Task.findOne({user: taskByUser});
+    if (task) {
+      const taskDelete = await Task.deleteOne({_id: id});
+      return res.send(taskDelete);
+    }
+    return res.sendStatus(403);
+
 
   } catch (error) {
     return res.send(error);
