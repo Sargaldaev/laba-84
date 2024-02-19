@@ -11,6 +11,7 @@ const auth = async (expressReq: Request, res: Response, next: NextFunction) => {
   const req = expressReq as RequestWithUser;
   const token = req.get('Authorization');
 
+
   if (!token) {
     return res.status(401).send({error: 'Token not provided!'});
   }

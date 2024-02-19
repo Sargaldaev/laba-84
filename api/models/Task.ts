@@ -22,7 +22,6 @@ const TaskSchema = new Schema<Tasks>({
     type: String,
     required: true,
     enum: ['new', 'in_progress', 'complete'],
-    default: 'new'
   }
 });
 
